@@ -1,0 +1,33 @@
+{% set counter = 1 %}
+
+{#
+	result:
+		Ocdla_County__c
+#}
+<style>
+	h1 { display:none; }
+</style>
+<h2>Browse by County</h2>
+
+<a href="javascript: history.go(-1);">Back to Previous Page</a>
+
+{% if error|length %}
+	<p style='font-style:italic;'>
+		Error: {{ error }}
+	</p>
+{% endif %}
+
+
+
+<p style="background-color:#eee; padding:8px;font-style:italic;">
+	{# query #}
+</p>
+<ul id="group-results">
+	{% for result in results %}
+	<li>
+		{# counter #}
+		{% set counter = counter + 1 %}
+		<a href="/directory/search?Ocdla_County__c={{ result.Ocdla_County__c }}">{{ result.Ocdla_County__c }}</a>
+	</li>
+	{% endfor %}
+</ul>

@@ -1,0 +1,203 @@
+{% set counter = 1 %}
+
+{#
+	result:
+		MailingCity
+#}
+
+
+{% if error|length %}
+	<p style='font-style:italic;'>
+		Error: {{ error }}
+	</p>
+{% endif %}
+
+
+{% if showExpertLinks %}
+<h3>Switch to <a href="/directory/expert-witness/search">Expert Witness Directory</a></h3>
+{% endif %}
+<a href="javascript: history.go(-1);">Back to Previous Page</a>
+
+<div id="search-page" style="margin-top:15px;">
+
+<!--
+<div class="search-box">
+	<h2>
+		Expert Witness Directory
+	</h2>
+	<div class="search-item">
+		<a href="/directory/expert-witness/search">Search the Directory</a>
+	</div>
+</div>
+-->
+
+<div id="search-form" class="search-box">
+	<h2>Search</h2>
+	<form method="get" action="/directory/search?ismobile=1" enctype="multipart/form-data">
+		<div>
+			<div class="form-item">
+				<label for="Ocdla_Occupation_Field_Type__c">Occupation/Field:</label>
+				<select id="Ocdla_Occupation_Field_Type__c" name="Ocdla_Occupation_Field_Type__c">
+					{% include 'occupations.html' %}
+				</select>
+			</div>
+						
+			<div class="form-item">
+				<label for="Interests">Area of Interest:</label>
+					<select id="Interests" name="Interests">
+						{% include 'aois.html' %}
+					</select>
+			</div>
+			
+{% if showExpertLinks %}
+			<div id="includeExpertsBlock" class="form-item">
+				Include Expert Witnesses:
+				<input style="width:auto;" id="IncludeExperts" title="Include experts in your name search.  This option is not available when searching by Contact Type or Area of Interest." name="IncludeExperts" value="1" checked="checked"  type="checkbox" />
+				<em>Check this box if you want to include Expert Witnesses in your name or city search.</em>
+			</div>
+{% endif %}
+
+			<div class="form-item">
+				<label for="FirstName">First Name:</label>
+				<input name="FirstName" size="20" value="" maxlength="35" type="text" />
+			</div>
+				
+			<div class="form-item">
+				<label for="LastName">Last Name:</label>
+				<input name="LastName" size="20" value="" maxlength="35" type="text" />
+			</div>
+			
+			<div class="form-item">
+				<label for="Ocdla_Organization__c">Company Name:</label>
+				<input name="Ocdla_Organization__c" size="20" value="" maxlength="35" type="text" /> 
+			</div>
+				
+			<div class="form-item">
+				<label for="MailingCity">City:</label>
+						<input name="MailingCity" size="20" value="" maxlength="35" type="text" />
+			</div>
+
+			<div class="form-item">
+				<input name="Submit" value="Search" type="submit" />
+			</div>
+		</div>
+	</form>
+</div>
+
+
+
+<div class="search-box">	
+	<h2>Browse by Category</h2>
+	<div class="search-item">
+		<a href="/directory/category/MailingCity?ismobile=1">City</a>
+	</div>
+	<div class="search-item">
+		<a href="/directory/category/Ocdla_County__c?ismobile=1">County</a>
+	</div>
+	<div class="search-item">
+		<a href="/directory/category/Ocdla_Areas_of_Interest_1__c?ismobile=1">Areas of Interest</a>
+	</div>
+	<div class="search-item">
+		<a href="/directory/category/Ocdla_Occupation_Field_Type__c?ismobile=1">Occupation/Field</a>
+	</div>
+</div>
+
+
+<div class="search-box">
+	<h2>Membership Directory Section PDFs, Updated Daily</h2>
+	<div class="search-item">
+		<a href="/sites/default/files/pdf/current_members_alpha.pdf">Last Name</a>
+	</div>
+	<div class="search-item">
+		<a href="/sites/default/files/pdf/current_members_city.pdf">City</a>
+	</div>
+	<div class="search-item">
+		<a href="/sites/default/files/pdf/current_members_interests.pdf">Members Interests</a>
+	</div>
+	<div class="search-item">
+		<a href="/sites/default/files/pdf/current_members_nonlawyers.pdf">Nonlawyer Members</a>
+	</div>
+	<div class="search-item">
+		<a href="/sites/default/files/pdf/current_contracts.pdf">Public Defense Contracts</a>
+	</div>
+</div>
+
+<div class="search-box">
+	<a href="/sites/default/files/pdf/OCDLA_2020_Membership_Directory.pdf">
+		<img src="/sites/default/files/images/directory.jpg" style="width:60px;height:75px;float:right;border:none;" />
+	</a>
+	<h2>Complete Membership Directory PDF</h2>
+	<!--<a href="#" onclick="openRequestedPopup(); return false;">
+		<img src="/sites/default/files/images/help.gif" alt="" style="border:none;" width="15px" height="15px" />
+	</a>
+	-->
+	<div class="search-item">
+		<a href="/sites/default/files/pdf/OCDLA_2020_Membership_Directory.pdf">Download</a>
+	</div>
+	<div class="search-item">
+           &mdash; also includes these sections, updated each September: <br />
+        • Public Defender Boards <br />
+        • Office of Public Defense Services Staff<br />
+        • Federal Public Defender Offices<br />
+  </div>
+</div>
+
+<div id="search-box-alpha" class="search-box">
+	<h2>Browse by Last Name</h2>
+	<a href="/directory/search?LastName=A&amp;op=STARTS%20WITH">A</a>&nbsp; 
+	<a href="/directory/search?LastName=B&amp;op=STARTS%20WITH">B</a>&nbsp; 
+	<a href="/directory/search?LastName=C&amp;op=STARTS%20WITH">C</a>&nbsp; 
+	<a href="/directory/search?LastName=D&amp;op=STARTS%20WITH">D</a>&nbsp; 
+	<a href="/directory/search?LastName=E&amp;op=STARTS%20WITH">E</a>&nbsp; 
+	<a href="/directory/search?LastName=F&amp;op=STARTS%20WITH">F</a>&nbsp;  
+	<a href="/directory/search?LastName=G&amp;op=STARTS%20WITH">G</a>&nbsp; 
+	<a href="/directory/search?LastName=H&amp;op=STARTS%20WITH">H</a>&nbsp; 
+	<a href="/directory/search?LastName=I&amp;op=STARTS%20WITH">I</a>&nbsp; 
+	<a href="/directory/search?LastName=J&amp;op=STARTS%20WITH">J</a>&nbsp; 
+	<a href="/directory/search?LastName=K&amp;op=STARTS%20WITH">K</a>&nbsp; 
+	<a href="/directory/search?LastName=L&amp;op=STARTS%20WITH">L</a>&nbsp; 
+	<a href="/directory/search?LastName=M&amp;op=STARTS%20WITH">M</a>&nbsp; 
+	<a href="/directory/search?LastName=N&amp;op=STARTS%20WITH">N</a>&nbsp; 
+	<a href="/directory/search?LastName=O&amp;op=STARTS%20WITH">O</a>&nbsp; 
+	<a href="/directory/search?LastName=P&amp;op=STARTS%20WITH">P</a>&nbsp; 
+	<a href="/directory/search?LastName=Q&amp;op=STARTS%20WITH">Q</a>&nbsp; 
+	<a href="/directory/search?LastName=R&amp;op=STARTS%20WITH">R</a>&nbsp; 
+	<a href="/directory/search?LastName=S&amp;op=STARTS%20WITH">S</a>&nbsp; 
+	<a href="/directory/search?LastName=T&amp;op=STARTS%20WITH">T</a>&nbsp; 
+	<a href="/directory/search?LastName=U&amp;op=STARTS%20WITH">U</a>&nbsp; 
+	<a href="/directory/search?LastName=V&amp;op=STARTS%20WITH">V</a>&nbsp; 
+	<a href="/directory/search?LastName=W&amp;op=STARTS%20WITH">W</a>&nbsp; 
+	<a href="/directory/search?LastName=X&amp;op=STARTS%20WITH">X</a>&nbsp; 
+	<a href="/directory/search?LastName=Y&amp;op=STARTS%20WITH">Y</a>&nbsp; 
+	<a href="/directory/search?LastName=Z&amp;op=STARTS%20WITH">Z</a>&nbsp; 
+</div>
+
+</div>
+
+<script type="text/javascript">
+	function hideElementById(id){
+		jQuery('#'+id).fadeOut();
+	}
+	
+	function showElementById(id){
+		jQuery('#'+id).fadeIn();		
+	}
+	
+	function onChange(e) {
+		if(e.target.options[e.target.selectedIndex].value != '') {
+			hideElementById('includeExpertsBlock');
+			jQuery('#IncludeExperts').attr('disabled',true);
+		}
+		else {
+			showElementById('includeExpertsBlock');
+			jQuery('#IncludeExperts').attr('disabled',false);
+		}
+	}
+
+	var interests = document.getElementById('Interests');
+	var occupation = document.getElementById('Ocdla_Occupation_Field_Type__c');
+	
+	interests.addEventListener('change',onChange,false);
+	occupation.addEventListener('change',onChange,false);
+	
+</script>

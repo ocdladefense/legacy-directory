@@ -1,0 +1,441 @@
+/**
+ * Layout
+ *
+ * Override layout.css
+ *
+ */
+body {
+	background-color: #f5f5f1 !important;
+	margin: 0 0;
+}
+
+.node {
+	min-height: 800px;
+}
+
+h1 {
+	line-height:35px;
+}
+
+.search-box label {
+	font-weight:bold;
+	display:block;
+}
+
+.search-box .form-item {
+	display:block;
+	margin-top:15px;
+}
+
+.search-box input,
+.search-box select {
+	display:block;
+	font-size:1.5em;
+	width:80%;
+}
+
+#right {
+	display:none;
+}
+
+#column_wrapper #center {
+	width:85%
+}
+
+
+/**
+ * Main directory page
+ *
+ */
+.search-title {
+	font-size: 1.2em;
+	font-weight:bold;
+}
+
+.search-box {
+	margin-bottom:15px;
+	line-height:1.4em;
+	font-size:1.2em;
+	width:49%;
+}
+
+
+
+
+/**
+ * Directory styles
+ *
+ * Style specific to the membership directory
+ *
+ */
+ 
+
+ 
+ 
+ 
+.history-link {
+	margin-top:-15px;
+	margin-bottom:25px;
+	display:inline-block;
+}
+ 
+.search-result-header {
+	width:100%;
+}
+.cell-directory-interests {
+	width:150px;
+}
+
+.cell-directory-name {
+	width:150px;
+}
+	
+.actions img {
+	width:16px;
+}
+	
+.with-comma {
+	
+}
+
+.with-comma:before {
+	content: ', ';
+}
+
+#search-results
+{
+	display:table;
+	background-color:#660066;
+	width:100%;
+	font-size:11px;
+	border-collapse:separate;
+	border: 1px solid grey;
+}
+
+#search-results tbody
+{
+	vertical-align:middle;
+}
+
+
+ 
+/**
+ * Category search
+ *
+ */
+
+#group-results
+{
+	-moz-column-count: 4;
+	-moz-columns: 4;
+	-webkit-columns: 4;
+	columns: 4;
+	min-height:400px;
+}
+
+#group-results li
+{
+	list-style-type: none;
+}
+
+
+
+
+.search-result-header li
+{
+	color:#fff;
+	padding:5px;
+}
+
+.result-row
+{
+	background-color: #DBE1E6;
+}
+
+.odd
+{
+	background-color:#f5f5f1;
+}
+
+
+
+/**
+ * CSS tables for directory results.
+ *
+ */
+.cell {
+	display:table-cell;
+	padding:5px;
+	vertical-align:middle;
+}
+
+
+.cell-actions {
+	width:50px;
+}
+
+
+.cell-actions img {
+	display:inline-block;
+	width:30px;
+	height:30px;
+}
+
+.cell-actions .member-icon {
+	display:none;
+}
+
+
+.row {
+	display:table-row;
+}
+
+.single-search-result {
+	display:table;
+}
+
+
+/**
+ * Single search result
+ *
+ */
+.single-search-result .cell {
+	background-color: #DBE1E6;
+}
+
+.single-search-result .cell-label {
+	font-weight:bold;
+	background-color:#fff;
+	width:24%;
+}
+
+/*
+.single-search-result .row {
+	margin-bottom:10px;
+	font-size:1.2em;
+	line-height:1.4em;
+	text-align:left;
+}
+*/
+
+.single-search-result .cell-label {
+	text-align:right;
+}
+
+#search-page #search-form {
+	float:right;
+	width:40%;
+}
+
+
+/**
+ * Mobile
+ *
+ * Card adjustments for mobile phone devices/iPad
+ */ 
+
+@media only screen and (max-width : 740px) {
+
+	.cell-directory-name {
+		color: #363636;
+	}
+	
+	#column_wrapper #center {
+		width:auto;
+	}
+
+	.not-mobile, li.not-mobile {
+		display:none;
+	}
+	
+	ul.not-mobile {
+		display:none !important;
+	}
+	
+	#search-results ul {
+		padding:6px;
+		font-size:12px;
+	}
+	
+	.directory-name {
+		font: normal normal normal 1.5em/1.4em Helvetica,sans-serif;
+	}
+	
+	#search-results {
+		background-color:transparent;
+		border:none;
+		text-align:center;
+	}
+	
+	#search-results ul a,
+	#search-results ul a:link,
+	#search-results ul a:visited {
+		color:inherit;
+	}
+
+	.row {
+		display:block;
+		float:none;
+	}	
+	
+	.single-search-result .row {
+		margin-bottom:10px;
+		font-size:1.2em;
+		line-height:1.4em;
+		text-align:left;
+		min-height:40px;
+		border: 1px solid #eee;
+		border-radius:3px;
+		padding:5px;
+		background-color:#fff;
+	}
+	
+/**
+ * Category search
+ *
+ */
+
+#group-results
+{
+	-moz-column-count: 2;
+	-moz-columns: 2;
+	-webkit-columns:2;
+	columns: 2;
+	min-height:400px;
+}
+	
+	.single-search-result .cell {
+		text-align:left;
+		width:100%;
+		background-color:transparent;
+	}
+	
+	.cell {
+		display:block;
+		padding:0px;
+	}
+	
+	.cell-expert-witness {
+		
+	}
+	
+
+	
+	#search-results ul {
+		/*
+		background-image:url('/sites/all/themes/ocdla2/images/guest-user-icon.png'), url('/sites/default/files/icons/expert.png');
+		background-position: left 8px top 5px, left 35px top 7px;
+		background-repeat:no-repeat;
+		background-size:25px 25px, 22px 22px;
+		*/
+		
+		border:1px solid #666;
+		border-radius:2px;
+		color:#222;
+		font-size:12px;
+		line-height:1.4;
+		display:inline-block;
+		float:none;
+    height: 160px;
+    margin-right: 4px;
+    width: 160px;
+    padding:6px 10px 8px;
+		border: 1px solid #E1E3DF;
+    border-color:#ddd;
+    border-bottom-color:#bbb;
+    background-color:#fff;
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);	
+		cursor:pointer;
+		text-align:left;
+		vertical-align:top;
+		position:relative;
+		margin-top:0px;
+		margin-bottom:6px;
+	}
+	
+	.cell-actions img {
+		width:25px;
+		height:25px;
+	}
+
+	#search-results ul .actions {
+		position:absolute;
+		bottom:3px;
+		right:3px;
+	}
+	
+	.cell-actions {
+		
+	}
+	
+	
+	
+	#group-results
+	{
+		height:auto;
+		columns:2;
+		-moz-columns:2;
+		-webkit-columns:2;
+		-moz-column-count: 2;
+		padding-left:0px;
+	}
+
+
+	#group-results li
+	{
+		line-height:1.8em;
+	}
+	
+	#search-box-alpha a {
+		width:15%;
+		display:inline-block;
+		border:1px solid #eee;
+		border-radius:2px;
+		padding:3px;
+	}
+	
+	#search-page #search-form {
+		float:none;
+		width:auto;
+	}
+	
+	.search-box {
+		width:auto;
+	}
+
+}
+
+
+
+@media only screen and (max-width : 320px) {
+	#group-results
+	{
+		height:auto;
+		columns:auto auto;
+		-moz-columns: auto auto;
+		-webkit-columns: auto auto;
+	}
+	
+
+	
+	#group-results li
+	{
+		display: inline-block;
+		width: 45%;
+		line-height:1.8em;
+	}
+	
+	#search-box-alpha a {
+		width:30%;
+	}
+	
+	#search-page #search-form {
+		float:none;
+		width:auto;
+	}
+	
+	.search-box {
+		width:auto;
+	}
+	
+}

@@ -1,0 +1,57 @@
+{% set counter = 1 %}
+{% set precisionRelevantFieldTypes = ['currency','double'] %}
+{% if error|length %}
+	<p style='font-style:italic;'>
+		Error: {{ error }}
+	</p>
+{% endif %}
+
+<p style='font-style:italic;'>
+	Object fields are gathered directly from Salesforce.
+</p>
+
+<p style="background-color:#eee; padding:8px;font-style:italic;">
+	{{ query }}
+</p>
+<table width="750" border="0" cellspacing="1" cellpadding="4" bgcolor="#ccc">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Label</th>
+			<th>Field Name</th>
+			<th>Field Type</th>
+			<th>Field Length</th>
+			<th>Precision</th>
+			<th>Is Custom?</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for field in fields %}
+			<tr valign="top" bgcolor="">
+				<td class="text" width="3%" bgcolor="DBE1E6">
+					{{ counter }}
+					{% set counter = counter + 1 %}
+				</td>
+				<td class="text" width="15%" bgcolor="DBE1E6">
+					{{ field.label }}
+				</td>
+				<td class="text" width="15%" bgcolor="DBE1E6">
+					{{ field.name }}
+				</td>
+				<td class="text" width="15%" bgcolor="DBE1E6">
+					{{ field.type }}
+					<!--<a href="{{ link }}/{{ result.Id }}" target="_new">{{ result.Id }}</a>-->
+				</td>
+				<td class="text" width="20%" bgcolor="DBE1E6">
+					{{ field.length }}
+				</td>
+				<td class="text" width="30%" bgcolor="DBE1E6">
+					{{ field.type in precisionRelevantFieldTypes ? field.precision : "N/A" }}
+				</td>
+				<td class="text" width="20%" bgcolor="DBE1E6">
+					{{ field.custom ? "true" : "false" }}
+				</td>
+			</tr>	
+		{% endfor %}
+	</tbody>
+</table>

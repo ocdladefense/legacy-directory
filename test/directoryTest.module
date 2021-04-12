@@ -1,0 +1,244 @@
+<?php
+
+
+include('/var/www/members/sites/ocdla/modules/directory/rest/salesforce.inc');
+use \Clickpdx\OAuth\OAuthGrantTypes;
+use \Clickpdx\Http\HttpRequest;
+
+function directory_menu() {
+	$items = array();
+	
+	$items['directory/home'] = array(
+		'name' => 'memdir',
+		'page callback' => 'show_members',
+		'title' => 'Membership Directory',
+		'access' => true,
+		'#theme' => 'ocdla',
+		'autoloader ' => 'member_load',
+	);	
+	
+	$items['directory/start'] = array(
+		'page callback' => 'directory_start',
+		'title' => 'oAuth Start Page',
+		'access' => true,
+		'#theme' => 'ocdla',
+	);
+	
+	$items['directory/callback'] = array(
+		'page callback' => 'oath_callback',
+		'title' => 'oAuth Callback Page',
+		'access' => true,
+		'#theme' => 'ocdla',
+	);
+	
+	return $items;
+}
+
+
+function directory_autoload($class){
+	$searchDirs = classSearchDirs(array(
+		'resource',
+		'http/lib',
+		'oauth/lib',
+		'service/lib',
+		'ocdla/lib',
+		'pdo/lib',
+		'saml/lib',
+		'session/lib',
+		'sso/lib',
+		'http/lib'
+	),array('prefix'=>'/var/www/members/vendor/clickpdx'));
+	$classFile = findClassFile($searchDirs,$class);
+	if(false!==$classFile)
+	{
+		loadClassFile($classFile);
+	}
+}
+
+
+function directory_init()
+{
+	require_once('/var/www/members/vendor/clickpdx/autoload.php');
+	spl_autoload_register("directory_autoload",true,false);
+	ResourceLoader::initResources();
+	ResourceLoader::addLoader('oauthService','oauthServiceLoader');
+}
+
+function oauthServiceLoader($rInfo)
+{
+	$svc = new Clickpdx\OAuth\OAuthHttpAuthorizationService();
+	$svc->setOAuthParams($rInfo['params']);
+	$svc->registerWriteHandler('POST',function($ch){
+		$ch->h = \curl_init($ch->getUri());
+		curl_setopt($ch->h, CURLOPT_HEADER, false);
+		curl_setopt($ch->h, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch->h, CURLOPT_POST, true);
+		curl_setopt($ch->h, CURLOPT_POSTFIELDS, $ch->formatPostFields());
+		return curl_exec($ch->h);
+	});
+	return $svc;
+}
+
+function directory_start()
+{
+	// return ResourceLoader::getInfo();
+	$svcAuth = ResourceLoader::getResource('sfOauth');
+
+	// Return an HttpRequest object to be sent to the Authorization Server.
+	$req = $svcAuth->getHttpRequest(OAuthGrantTypes::GRANT_NONE);
+	
+	// Get a Redirect object whose output can be sent to the User-Agent.
+	// This basically redirects the user to the Authorization Server per the
+	// above Request.
+	$resp = $req->getAsHttpRedirect();
+	
+	$resp->write();
+}
+
+function oath_callback()
+{
+	$svcAuth = ResourceLoader::getResource('sfOauth');
+
+	$req = HttpRequest::createFromGlobals();
+
+	// Send the Authorization Code to the resource server to get an access token.
+	$tokReq = $svcAuth->getHttpRequest(OAuthGrantTypes::GRANT_AUTHORIZATION_CODE);
+	$tokReq->addParam('code',$req->getParam('code'));
+	// $tokReq->setAuthorizationCode($req->getParam('authorization_code'))
+
+	// $svcAuth->createJsonResponseParser();
+	// 
+	$tokResp = $svcAuth->sendRequest($tokReq);
+
+	// Now parse the Response:	
+	// $tokResp->setResponseParser(new JsonResponseParser());
+	$tokInfo = json_decode($tokResp->read(),true);
+	if($tokInfo['error'])
+	{
+		print "<h2>Error: {$tokInfo['error_description']}</h2>";
+	}
+
+	// these should be in the Service object
+	// --> storeSession($name,$val)
+	// $resp->getAccessToken()
+	// $resp->getInstanceUrl()
+	$_SESSION['access_token'] = $tokInfo['access_token'];
+	$_SESSION['instance_url'] = $tokInfo['instance_url'];
+
+	// $svcAuth->gotoResource()
+	session_write_close();
+	header( 'Location: /index.php?q=directory/home' ) ;
+	exit;
+}
+
+function show_members()
+{
+	$access_token = $_SESSION['access_token'];
+	$instance_url = $_SESSION['instance_url'];
+
+	if (!isset($access_token) || $access_token == "") {
+			die("Error - access token missing from session!");
+	}
+
+	if (!isset($instance_url) || $instance_url == "") {
+			die("Error - instance URL missing from session!");
+	}
+	// print_r($_SESSION);
+	return show_accounts($instance_url, $access_token);
+}
+
+
+function oath_callback_test()
+{
+	$svcAuth = ResourceLoader::getResource('sfOauth');
+	// Instantiate the resource/service
+	
+	// Construct a Request to the service
+		// the request should be constructed from resource data
+	
+	// Send the Request
+	
+	// Store the response sent from the service
+		// call the getResponse() method
+	
+	// Call the read() method from the Readable interface (of the Response)
+
+	function checkauthorizationcode()
+	{//function checkrequestparams()
+		$code = $_GET['code'];
+
+		if (!isset($code) || $code == "")
+		{
+				die("Error - code parameter missing from request!");
+		}
+	}
+
+	$req = HttpRequest::createFromGlobals();
+	$code = $req->getParam('code');
+	print "<h2>Global Request object:</h2>";
+	print $req;
+	print "<br />Request auth code is: {$code}.";
+	
+	print "<p />";
+	// Send the Authorization Code to the resource server to get an access token.
+	$tokReq = $svcAuth->getHttpRequest(OAuthGrantTypes::GRANT_AUTHORIZATION_CODE);
+	$tokReq->addParam('code',$req->getParam('code'));
+	// $tokReq->setAuthorizationCode($req->getParam('authorization_code'))
+
+	print "<h2>Access Token Request object:</h2>";	
+	print $tokReq;
+	
+
+	// $svcAuth->createJsonResponseParser();
+	// 
+	$tokResp = $svcAuth->sendRequest($tokReq);
+	print "<h2>Access Token Response object:</h2>";	
+	if(!$tokResp) die('Could not get response.');
+	print $tokResp;
+	
+	// Now parse the Response:	
+	// $tokResp->setResponseParser(new JsonResponseParser());
+	$tokInfo = json_decode($tokResp->read(),true);
+	if($tokInfo['error'])
+	{
+		print "<h2>Error: {$tokInfo['error_description']}</h2>";
+	}
+	
+	exit;
+
+	// $svcAuth->makeHttpRequest($type='requestAccessToken');
+	// $resp = new OAuthHttpAuthorizationResponse($response);
+
+	// these should be in the Service object
+	// --> storeSession($name,$val)
+	// $resp->getAccessToken()
+	// $resp->getInstanceUrl()
+	$_SESSION['access_token'] = $access_token;
+	$_SESSION['instance_url'] = $instance_url;
+
+	// $svcAuth->gotoResource()
+	session_write_close();
+	header( 'Location: /index.php?q=directory/home' ) ;
+	exit;
+}
+
+
+
+function directory_start_debugging($svc,$req,$resp)
+{
+
+	print $svc;
+	print "<p />";
+	print $req;
+	print "<p />";
+	print $resp;
+	
+	// $svcAuth->writeResponse();
+	// $resp->alter();
+}
+
+function directory_home()
+{
+	//print "foo"; exit;
+	return "<h2>Membership Directory</h2>";
+}

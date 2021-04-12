@@ -1,0 +1,111 @@
+{% set counter = 1 %}
+
+{#
+	queryObj:
+		
+	result:
+		Id
+		Contact_ID__c
+		LastName
+		FirstName
+		Ocdla_Organization__c
+		Ocdla_Is_Expert_Witness__c
+		Ocdla_Publish_Work_Phone__c
+		Ocdla_Publish_Work_Email__c
+		Ocdla_Publish_Mailing_Address__c
+		OrderApi__Work_Phone__c
+		OrderApi__Work_Email__c
+		Ocdla_Website__c
+#}
+
+<a class="history-link" href="javascript: history.go(-1);"><< Back to previous page</a>
+
+{% if error|length %}
+	<p style='font-style:italic;'>
+		Error: {{ error }}
+	</p>
+{% endif %}
+
+
+<p style="background-color:#eee; padding:8px;font-style:italic;">
+	{% if youSearchedFor|length %}
+		<span style="font-style:italic;">The search, <em>{{ youSearchedFor }}</em> returned {{ numResults }} result(s);
+	{% else %}
+		Your search returned {{ numResults }} result(s).<br />	
+	{% endif %}
+</p>
+
+
+<div id="search-results">
+		<ul class="row search-result-header not-mobile">
+			<li class="cell cell-header cell-directory-company">Expert</li>
+			<li class="cell cell-header cell-directory-name">Name</li>
+			<li class="cell cell-header cell-directory-company">Company</li>
+			<li class="cell cell-header cell-directory-phone">Phone</li>
+			<li class="cell cell-header cell-directory-city">City</li>
+			<li class="cell cell-header cell-directory-email">Email</li>
+			<li class="cell cell-header cell-directory-occupation">Occupation</li>
+			<li class="cell cell-header cell-directory-interests">Interests</li>
+			<li class="cell cell-header cell-directory-actions">&nbsp;</li>
+		</ul>
+		{% for result in results %}
+			{% set counter = counter + 1 %}
+			<ul class="row result-row {{ cycle(['odd','even'],loop.index) }}">
+				<li class="cell cell-header cell-actions">
+					<a class="member-icon" title="View this OCDLA member's profile." href="{{ link }}/directory/member/{{ result.Id }}">
+						<img src="/sites/all/themes/ocdla2/images/guest-user-icon.png" />
+					</a>
+					{% if result.Ocdla_Is_Expert_Witness__c %}
+						<a class="expert-icon" title="View this OCDLA member's Expert Witness profile." href="{{ link }}/expert/{{ result.Id }}">
+							<img src="/sites/default/files/icons/expert.png" />
+						</a>
+					{% endif %}
+				</li>
+				<li class="cell directory-name">
+					{% if result.Ocdla_Is_Expert_Witness__c and not result.Ocdla_Current_Member_Flag__c %}		
+						<a href="{{ link }}/expert/{{ result.Id }}">{{ result.LastName }}, {{ result.FirstName }}</a>
+					{% else %}
+						<a href="{{ link }}/directory/member/{{ result.Id }}">{{ result.LastName }}, {{ result.FirstName }}</a>
+					{% endif %}
+				</li>
+				<li class="cell directory-organization">
+					{{ result.Ocdla_Organization__c }}
+				</li>
+				<li class="cell directory-work-phone">
+					{% if result.Ocdla_Publish_Work_Phone__c %}
+						<a href="tel:{{ result.OrderApi__Work_Phone__c }}">{{ result.OrderApi__Work_Phone__c }}</a>
+					{% else %}
+						N/A
+					{% endif %}
+				</li>
+				<li class="cell directory-mailing-city">
+					{{ result.MailingCity }}, {{ result.MailingStateCode }}
+				</li>
+
+				<li class="cell">
+					<a href="{{ link }}/directory/member/{{ result.Id }}">View email</a>
+				</li>
+				<li class="cell not-mobile">
+					{{ result.Ocdla_Occupation_Field_Type__c }}
+				</li>
+				<li class="cell not-mobile">
+				 {% set aois = [result.Ocdla_Areas_of_Interest_1__c,result.Ocdla_Areas_of_Interest_2__c,result.Ocdla_Areas_of_Interest_3__c, result.Ocdla_Areas_of_Interest_4__c, result.Ocdla_Areas_of_Interest_5__c] %}
+				 {% set c = 0 %}
+						{% spaceless %}
+				{% for area in aois %}
+					{% if area is not empty %}
+{% if c > 0 %}<span class="with-comma">{{ area|trim }}{% else %}<span class="without-comma">{{ area|trim }}{% endif %}</span>
+						{% set c = c +1 %}
+						{% endif %}
+
+					{% endfor %}
+						{% endspaceless %}
+				</li>	
+				<li class="cell actions">
+					<a target="_new" title="Load in Google Maps" href="https://www.google.com/maps/place/{{ result.MailingStreet }},{{ result.MailingCity }},{{ result.MailingStateCode }}+{{ result.MailingPostalCode }}">
+						<img src="/sites/all/themes/ocdla2/images/google-map-location.png" />
+					</a>
+				</li>
+	</ul>
+		{% endfor %}
+</div>

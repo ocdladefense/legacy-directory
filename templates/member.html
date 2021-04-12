@@ -1,0 +1,188 @@
+{#
+	SELECT Id, FirstName, LastName, MiddleName,
+	Ocdla_Organization__c,
+	MailingStreet, MailingCity, MailingState, MailingPostalCode,
+	Ocdla_Bar_Number__c,
+	Ocdla_Investigator_License_Number__c,
+	Ocdla_Areas_of_Interest_1__c, Ocdla_Areas_of_Interest_2__c, Ocdla_Areas_of_Interest_3__c, Ocdla_Areas_of_Interest_4__c, Ocdla_Areas_of_Interest_5__c,
+	OrderApi__Work_Phone__c,
+	MobilePhone,
+	Fax,
+	OrderApi__Work_Email__c,
+	Ocdla_Publish_Home_Address__c,
+	Ocdla_Publish_Mailing_Address__c,
+	Ocdla_Publish_Work_Email__c,
+	Ocdla_Publish_Work_Phone__c,
+	Ocdla_Website__c
+#}
+
+<a href="javascript: history.go(-1);">Back to Previous Page</a>
+
+{% if error|length %}
+	<p style='font-style:italic;'>
+		Error: {{ error }}
+	</p>
+{% endif %}
+
+
+{% for contact in contacts %}
+{% if contact.Ocdla_Current_Member_Flag__c %}
+<div class="single-search-result" width="750" border="0" cellspacing="1" cellpadding="4" bgcolor="#ccc">
+	<div class="row">
+		<h3>{{ contact.FirstName }} {{ contact.LastName }}</h3>
+	</div>
+	<div class="row">
+		<div class="text cell">
+			MEMBER INFORMATION
+		</div>
+	</div>
+	<div class="row">
+		<div class="text cell cell-label">
+			Name:
+		</div>
+		<div class="text cell">
+			{{ contact.FirstName }} {{ contact.LastName }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="text cell cell-label">
+			<font color="000000"> Organization:</font>
+		</div>
+		<div class="text cell">
+			{{ contact.Ocdla_Organization__c }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="text cell cell-label">
+			OSB #
+		</div>
+		<div class="text cell">
+			{{ contact.Ocdla_Bar_Number__c }} 
+		</div>
+	</div>
+	<div class="row">
+		<div class="text cell cell-label">
+			Investigator #
+		</div>
+		<div class="text cell">
+			{{ contact.Ocdla_Investigator_License_Number__c }}
+		</div>
+	</div>
+
+
+	
+{#      
+$tmp="<i>This user has chosen not to publish this information.</i>";
+if( $row["publish"]==0 ) {
+	$address_line_1=$tmp;
+	$address_line_2=$tmp;
+}
+else {
+	$address_line_1=$row["address_line_1"];
+	$address_line_2=$row["address_line_2"];
+}
+#}
+
+{% if contact.Ocdla_Publish_Mailing_Address__c %}
+	<div class="row">
+		<div class="text cell cell-label">
+			Address:
+		</div>
+		<div class="text cell">
+			{{ contact.MailingStreet }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="text cell cell-label">
+			City, State, Zip:
+		</div>
+		<div class="text cell">
+			{{ contact.MailingCity }}, {{ contact.MailingState }} {{ contact.MailingPostalCode }}
+		</div>
+{% else %}
+	<div class="row">
+		<div class="text cell cell-label">
+			Address Line 1:
+		</div>
+		<div class="text cell">
+			This member has chosen not to publish their address.
+		</div>
+	</div>
+{% endif %}
+	</div>
+	<div class="row">
+		<div class="text cell cell-label">
+			Phone:
+		</div>
+		<div class="text cell">
+			{# phoneNumberFormat( work_phone ) #}
+			{% if contact.Ocdla_Publish_Work_Phone__c %}
+				{{ contact.OrderApi__Work_Phone__c }}
+			{% else %}
+				This member has chosen not to publish their phone number.
+			{% endif %}
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="text cell cell-label">
+			Cell Phone:
+		</div>
+		<div class="text cell" width="76%">
+			{# phoneNumberFormat(cell_phone) #}
+			{% if contact.Ocdla_Publish_Work_Phone__c %}
+				{{ contact.Ocdla_Cell_Phone__c }}
+			{% else %}
+				This member has chosen not to publish their cell phone.
+			{% endif %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="text cell cell-label">
+			<font color="000000">Fax:</font>
+		</div>
+		<div class="text cell">
+			{# phoneNumberFormat(fax_number) #}
+			{{ contact.Fax }}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="text cell cell-label">
+			<font color="000000">E-Mail:</font>
+		</div>
+		<div class="text cell">
+			{% if contact.Ocdla_Publish_Work_Email__c %}
+				<a href="mailto:{{ contact.OrderApi__Work_Email__c }}">{{ contact.OrderApi__Work_Email__c }}</a>
+			{% else %}
+				This member has chosen not to publish their email.
+			{% endif %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="text cell cell-label">
+			<font color="000000">Web:</font>
+		</div>
+		<div class="text cell">
+			<a href="http://{{ contact.Ocdla_Website__c }}" target="_new">{{ contact.Ocdla_Website__c }}</a>
+		</div>
+
+	</div>
+
+	<div class="row">
+		<div class="text cell cell-label">
+			Areas of Interest:
+		</div>
+		<div class="text cell">
+			{{ contact.Ocdla_Areas_of_Interest_1__c }}<br />
+			{{ contact.Ocdla_Areas_of_Interest_2__c }}<br />
+			{{ contact.Ocdla_Areas_of_Interest_3__c }}<br />
+			{{ contact.Ocdla_Areas_of_Interest_4__c }}<br />
+			{{ contact.Ocdla_Areas_of_Interest_5__c }}<br />
+		</div>
+	</div>
+	
+</div>
+
+{% endif %}
+{% endfor %}

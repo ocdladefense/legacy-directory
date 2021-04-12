@@ -1,0 +1,185 @@
+<?php
+
+use Clickpdx\OAuth\OAuthGrantTypes;
+use Clickpdx\SfRestApiRequestTypes;
+use Clickpdx\Http\HttpRequest;
+use Clickpdx\ResourceLoader;
+
+
+function directory_menu() {
+	$items = array();
+	
+	$items['directory'] = array(
+		'title' => 'OCDLA Online Membership Directory Search',
+		'comment' => 'Base router/loader for Saleforce directory.',
+		'page callback' => 'searchForm',
+		'theme' => 'ocdla2',
+		'routeClass' => 'SfDirectoryController',
+		'routeArguments' => array(2),
+		'files' => array(
+			'dependency' => '/sites/default/modules/salesforce/includes/SalesforceController.php',
+			'controller' => 'includes/SfDirectoryController.php'
+		)	
+	);
+	
+	
+	$items['directory/start'] = array(
+		'page callback' => 'oauth_start',
+		'title' => 'oAuth Start Page',
+		'#theme' => 'ocdla',
+	);
+
+	
+	$items['directory/callback'] = array(
+		'page callback' => 'oath_callback',
+		'title' => 'oAuth Callback Page',
+		'#theme' => 'ocdla',
+	);
+	
+	$items['directory/members'] = array(
+		'name' => 'memdir',
+		'title' => 'Salesforce Membership Directory Example',
+		'page callback' => 'show_members',
+		'theme' => 'ocdla2',
+		'routeClass' => 'SfDirectoryController',
+	);
+
+
+	
+	
+	
+	
+
+	$items['directory/member'] = array(
+		'comment' => 'Base router/loader for Saleforce directory.',
+		'access' => 'user_has_role',
+		'access arguments' => array('admin'),
+		'files' => array(
+			'dependency' => '/sites/default/modules/salesforce/includes/SalesforceController.php',
+			'controller' => 'includes/SfDirectoryController.php'
+		),
+	);
+	
+
+	
+	
+	$items['directory/member/%sfId'] = array(
+		'page callback' => 'showMember',
+		'title' => 'Directory page',
+		'access' => true,
+		// 'access arguments' => array('admin'),
+		'routeClass' => 'SfDirectoryController',
+		'routeArguments' => array(2),
+		'theme' => 'ocdla2'
+	);
+	
+	$items['directory/search'] = array(
+		'page callback' => 'searchContacts',
+		'title' => 'Search Results',
+		'access' => true,//'user_has_role',
+		'access arguments' => array('admin'),
+		'routeClass' => 'SfDirectoryController',
+		'routeArguments' => array(4),
+		'files' => array(
+			'dependency' => '/sites/default/modules/salesforce/includes/SalesforceController.php'//'controller' => 'includes/SfDirectoryController.php'
+		),
+		'theme' => 'ocdla2'
+	);
+	
+	$items['directory/category/%cat'] = array(
+		'page callback' => 'getDistinctValues',
+		'title' => 'Category Browse',
+		'access' => true,
+		'routeClass' => 'SfDirectoryController',
+		'routeArguments' => array(2),
+		'files' => array(
+			'dependency' => '/sites/default/modules/salesforce/includes/SalesforceController.php',
+			'controller' => 'includes/SfDirectoryController.php'
+		),
+		'theme' => 'ocdla2',
+	);
+	
+
+	
+	
+	$items['directory/category/%cat/%value'] = array(
+		'page callback' => 'searchByGroup',
+		'title' => 'Category Browse',
+		'access' => true,
+		'routeClass' => 'SfDirectoryController',
+		'routeArguments' => array(2,3),
+		'files' => array(
+			'dependency' => '/sites/default/modules/salesforce/includes/SalesforceController.php',
+			'controller' => 'includes/SfDirectoryController.php'
+		),
+		'theme' => 'ocdla2',
+	);
+	
+	$items['directory/search/Contact/LastName/%LastName'] = array(
+		'page callback' => 'findMembersByLastName',
+		'title' => 'Search Results',
+		'access' => 'user_has_role',
+		'access arguments' => array('admin'),
+		'routeClass' => 'SfDirectoryController',
+		'routeArguments' => array(4),
+		'files' => array(
+			'dependency' => '/sites/default/modules/salesforce/includes/SalesforceController.php',
+			'controller' => 'includes/SfDirectoryController.php'
+		),
+		'theme' => 'ocdla2',
+	);
+	
+	$items['directory/add/Contact/Id/%Id'] = array(
+		'page callback' => 'addMember',
+		'title' => 'Add Member',
+		'access' => 'user_has_role',
+		'access arguments' => array('admin'),
+		'routeClass' => 'SfDirectoryController',
+		'routeArguments' => array(4),
+		'files' => array(
+			'dependency' => '/sites/default/modules/salesforce/includes/SalesforceController.php',
+			'controller' => 'includes/SfDirectoryController.php'
+		),
+		'theme' => 'ocdla2',
+	);
+	
+	$items['directory/debug/%LastName'] = array(
+		'page callback' => 'debugForceApi',
+		'title' => 'Search Results (DEBUG)',
+		'access' => 'user_has_role',
+		'access arguments' => array('admin'),
+		'routeClass' => 'SfDirectoryController',
+		'routeArguments' => array(2),
+		'files' => array(
+			'dependency' => '/sites/default/modules/salesforce/includes/SalesforceController.php',
+			'controller' => 'includes/SfDirectoryController.php'
+		),
+		'theme' => 'ocdla2',
+	);
+	
+	
+	
+	$items['directory/search/Contact/reconcile'] = array(
+		'page callback' => 'getDups',
+		'title' => 'Records to be Reconciled',
+		'access' => 'user_has_role',
+		'access arguments' => array('admin'),
+		'routeClass' => 'SfDirectoryController',
+		'files' => array(
+			'dependency' => '/sites/default/modules/salesforce/includes/SalesforceController.php',
+			'controller' => 'includes/SfDirectoryController.php'
+		),
+		'theme' => 'ocdla2',
+	);
+	
+	
+	
+	return $items;
+}
+
+
+function directory_preprocess_page(&$vars)
+{
+//	print_r($vars);exit;
+//	$vars['theme_hook_suggestion'] = 'page-drawer';
+}

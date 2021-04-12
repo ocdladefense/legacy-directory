@@ -1,0 +1,36 @@
+{% set counter = 1 %}
+{% if error|length %}
+	<p style='font-style:italic;'>
+		Error: {{ error }}
+	</p>
+{% endif %}
+
+<p style='font-style:italic;'>
+	{{ result | raw }}
+</p>
+
+<table width="750" border="0" cellspacing="1" cellpadding="4" bgcolor="#ccc">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Query</th>
+			<th>Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for query in queries %}
+			<tr valign="top" bgcolor="">
+				<td class="text" width="3%" bgcolor="DBE1E6">
+					{{ counter }}
+					{% set counter = counter + 1 %}
+				</td>
+				<td class="text" width="15%" bgcolor="DBE1E6">
+					{{ query }}
+				</td>
+				<td class="text" width="20%" bgcolor="DBE1E6">
+					N/A
+				</td>
+			</tr>	
+		{% endfor %}
+	</tbody>
+</table>
